@@ -52,20 +52,31 @@ function TodoList({ todoList, setTodoList }) {
 
 function Todo({ todo, setTodoList }) {
   const [inputValue, setInputValue] = useState("");
+  // 수정 버튼이 눌렸는지 체크
+  const [updateBtn, setUpdateBtn] = useState(false);
   return (
-    <li>
+    <li id={'todo_' + todo.id}>
       {todo.content}
       <input
+        className='update_todo_input'
         value={inputValue}
         onChange={(event) => setInputValue(event.target.value)}
       />
       <button
         onClick={() => {
-          setTodoList((prev) =>
-            prev.map((el) =>
-              el.id === todo.id ? { ...el, content: inputValue } : el
-            )
-          );
+          if (updateBtn) {
+            setUpdateBtn(false);
+            document.querySelector('#todo_' + todo.id + ' input').style.display = 'none';
+            if (inputValue.trim() === '') return
+            setTodoList((prev) =>
+              prev.map((el) =>
+                el.id === todo.id ? { ...el, content: inputValue } : el
+              )
+            );
+          } else {
+            setUpdateBtn(true);
+            document.querySelector('#todo_' + todo.id + ' input').style.display = 'inline';
+          }
         }}
       >
         수정
